@@ -41,7 +41,7 @@ struct ContentView: View {
         }
         .padding()
         .onAppear() {
-                viewModel.fetchEmojis(from: K.emojisURL)
+                viewModel.fetchEmojis()
         }
     }
 }

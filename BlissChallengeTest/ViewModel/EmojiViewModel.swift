@@ -9,11 +9,11 @@ class EmojiViewModel: ObservableObject {
     
     private let repository = EmojiRepository()
     
-    func fetchEmojis(from url: String){
+    func fetchEmojis(){
         //Buscar a lista de emojis na url:
-        repository.fetchEmojis(from: url) { emojis in
+        repository.fetchEmojis { [weak self] fetchedEmojis in
             DispatchQueue.main.async{
-                self.emojis = emojis
+                self?.emojis = fetchedEmojis
             }
         }
     }

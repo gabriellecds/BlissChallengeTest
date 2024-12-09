@@ -9,11 +9,30 @@ class EmojiRepository {
     }
     
     //buscar dados JSON na URL e preencher o array "emojis"
-    func fetchEmojis(from urlString: String, completion: @escaping([Emoji]) -> Void) {
+    func fetchEmojis(completion: @escaping([Emoji]) -> Void) {
+        
+        //Verificar se há dados no cache:
+        let cacheEmoji = fetchSavedEmojis()
+        
+        if !cacheEmoji.isEmpty{
+            //retornar os dados que estiverem no cache
+            print("Using cache emojis")
+            completion(cacheEmoji.map {Emoji(id: $0.id ?? "", url: $0.url ?? "")})
+            return
+        }
+        
+        //Se nao houver dados em cache, buscar da API:
+        print("Using API emojis")
+        fetchEmojiFromAPI(completion: completion)
+    }
+        
+    private func fetchEmojiFromAPI(completion: @escaping([Emoji]) -> Void) {
+        let urlString = K.emojisURL
         
         //verificar se a url é válida:
         guard let url = URL(string: urlString) else {
             print("Unvalid URL")
+            completion ([])
             return
         }
         
@@ -23,6 +42,7 @@ class EmojiRepository {
             //verificar se houve erro:
             if let e = error {
                 print("Error searching for emojis: \(e.localizedDescription)")
+                completion([])
                 return
             }
             
