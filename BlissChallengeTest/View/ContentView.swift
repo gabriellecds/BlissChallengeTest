@@ -25,7 +25,7 @@ struct ContentView: View {
                 viewModel.saveSelectedEmoji()
             }) {
                 //aparencia do botao
-                Text("Get Emoji")
+                Text("Random Emoji")
                     .font(.title)
                     .font(.system(size: 25))
                     //espaçamento do texto
