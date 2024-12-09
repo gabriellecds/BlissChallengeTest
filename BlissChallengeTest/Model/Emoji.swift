@@ -1,6 +1,4 @@
-import Foundation
-
-struct Emoji: Identifiable {
-    let id: String
-    let url: String
+struct Emoji {
+   let id: String
+   let url: String
 }

@@ -1,47 +1,34 @@
 import Foundation
+import SwiftUI
 
 class EmojiViewModel: ObservableObject {
     //criar o array de emojis:
     @Published var emojis: [Emoji] = []
+    //criar a var do emoji selecionado quando o botao é pressionado
+    @Published var selectedEmoji: Emoji? = nil
     
-    //buscar dados JSON na URL e preencher o array "emojis"
-    func fetchEmojis(from urlString: String){
-        
-        //verificar se a url é válida:
-        guard let url = URL(string: urlString) else {
-            print("Unvalid URL")
-            return
+    private let repository = EmojiRepository()
+    
+    func fetchEmojis(from url: String){
+        //Buscar a lista de emojis na url:
+        repository.fetchEmojis(from: url) { emojis in
+            DispatchQueue.main.async{
+                self.emojis = emojis
+            }
         }
-        
-        //criar uma tarefa de rede (dataTask)
-        URLSession.shared.dataTask(with: url) {data, response, error in
-            
-            //verificar se houve erro:
-            if let e = error {
-                print("Error searching for emojis: \(e.localizedDescription)")
-                return
-            }
-            
-            //verificar se o dado recebido nao é nulo:
-            guard let data = data else {
-                print("Empty")
-                return
-            }
-        
-            //decodificar o JSON:
-            do {
-                //dados recebidos transformados em um dicionário de String
-                let decodedData = try JSONDecoder().decode([String: String].self, from: data)
-                DispatchQueue.main.async {
-                    
-                    //transformar o dicionário em lista para popular a lista "emojis"
-                    self.emojis = decodedData.map { Emoji(id: $0.key, url: $0.value) }
-                }
-            } catch {
-                print("Error decoding JSON: \(error.localizedDescription)")
-            }
-            
-        //iniciar a execução da tarefa de rede (dataTask)
-        }.resume()
+    }
+    
+    func selectRandomEmoji(){
+        //selecionar um emoji aleatorio da lista
+        if !emojis.isEmpty {
+            selectedEmoji = emojis.randomElement()
+        }
+    }
+    
+    func saveSelectedEmoji(){
+        //salvar apenas o emoji selecionado
+        guard let emoji = selectedEmoji else { return }
+        repository.saveEmoji(id: emoji.id, url: emoji.url)
     }
 }
+                                                 

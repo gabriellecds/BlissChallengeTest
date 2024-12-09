@@ -3,12 +3,11 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var viewModel = EmojiViewModel()
-    @State private var selectedEmoji: Emoji? = nil
     
     var body: some View {
         VStack {
             //Verificar se existe um emoji selecionado
-            if let emoji = selectedEmoji {
+            if let emoji = viewModel.selectedEmoji {
                 
                 //Se houver, carregar a imagem usando o AsyncImage
                 AsyncImage(url: URL(string: emoji.url)) { image in
@@ -22,10 +21,8 @@ struct ContentView: View {
             }
             
             Button(action: {
-                //se a lista de emojis NAO estiver vazia, mostrar um amoji aleatorio
-                if !viewModel.emojis.isEmpty {
-                    selectedEmoji = viewModel.emojis.randomElement()
-                }
+                viewModel.selectRandomEmoji()
+                viewModel.saveSelectedEmoji()
             }) {
                 //aparencia do botao
                 Text("Get Emoji")
@@ -44,7 +41,7 @@ struct ContentView: View {
         }
         .padding()
         .onAppear() {
-            viewModel.fetchEmojis(from: K.emojisURL)
+                viewModel.fetchEmojis(from: K.emojisURL)
         }
     }
 }
