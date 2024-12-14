@@ -97,4 +97,72 @@ class EmojiRepository {
             return []
         }
     }
+    
+    //Buscar avatar no cache
+    func fetchAvatarFromCache(by login: String) -> AvatarEntity? {
+        let request: NSFetchRequest<AvatarEntity> = AvatarEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "login == %@", login)
+        
+        do {
+            let results = try context.fetch(request)
+            return results.first
+        } catch {
+            print("Error fetching avatar from cache: \(error)")
+            return nil
+        }
+    }
+    
+    //Buscar na API
+    func fetchAvatarFromAPI(by username: String, completion: @escaping(Result<Avatar, Error>) -> Void) {
+        let urlString = K.avatarURL + username
+        
+        //verificar se a url é válida:
+        guard let url = URL(string: urlString) else {
+            print("Unvalid URL")
+            return
+        }
+        
+        //criar uma tarefa de rede (dataTask)
+        URLSession.shared.dataTask(with: url) {data, response, error in
+            
+            //verificar se houve erro:
+            if let e = error {
+                print("Error searching for avatar: \(e.localizedDescription)")
+                return
+            }
+            
+            //verificar se o dado recebido nao é nulo:
+            guard let data = data else {
+                print("Empty")
+                return
+            }
+        
+            //decodificar o JSON:
+            do {
+                let avatar = try JSONDecoder().decode(Avatar.self, from: data)
+                completion(.success(avatar))
+                print("Avatar saved")
+                
+            } catch {
+                print("Error decoding JSON: \(error.localizedDescription)")
+            }
+            
+        //iniciar a execução da tarefa de rede (dataTask)
+        }.resume()
+    }
+    
+    //Salvar o avatar no coreData
+    func saveAvatar(_ avatar: Avatar) {
+        let avatarEntity = AvatarEntity(context: context)
+        avatarEntity.id = Int64(avatar.id)
+        avatarEntity.login = avatar.login
+        avatarEntity.avatarURL = avatar.avatarURL
+        
+        do {
+            try context.save()
+            print("Avatar \(avatar.login) saved")
+        } catch {
+            print("Error saving avatar: \(error)")
+        }
+    }
 }

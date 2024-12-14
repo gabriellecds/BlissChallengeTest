@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     @StateObject private var viewModel = EmojiViewModel()
+    //@State private var searchText: String = ""
     
     var body: some View {
         NavigationView {
@@ -19,6 +19,16 @@ struct ContentView: View {
                     } placeholder: {
                         ProgressView()
                     }
+                } else if let avatarURL = viewModel.avatar?.avatarURL,
+                   let url = URL(string: avatarURL) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                    } placeholder: {
+                        ProgressView()
+                    }
                 }
                 
                 Button(action: {
@@ -28,7 +38,6 @@ struct ContentView: View {
                     //aparencia do botao
                     Text("Random Emoji")
                         .font(.title)
-                        .font(.system(size: 25))
                     //espaçamento do texto
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -36,31 +45,56 @@ struct ContentView: View {
                         .background(Color.gray)
                         .cornerRadius(15)
                         .foregroundColor(.white)
-                    //espaçamento do botao nas laterais
-                        .padding(.horizontal, 20)
-                }
-                .padding(.bottom)
+                    }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
                 
                 NavigationLink(destination: EmojiListView()) {
-                        //aparencia do botao
-                        Text("Emojis List")
+                    //aparencia do botao
+                    Text("Emojis List")
+                        .font(.title)
+                    //espaçamento do texto
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.gray)
+                        .cornerRadius(15)
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                
+                HStack {
+                    //campo de busca
+                    TextField("Enter username", text: $viewModel.searchText)
+                        .padding()
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray, lineWidth: 10)
+                        )
+                        .cornerRadius(10)
+                        .autocapitalization(.none)
+                    
+                    Button(action: {
+                        viewModel.searchAvatar()
+                    }) {
+                        Text("Search")
                             .font(.title)
-                            .font(.system(size: 25))
                         //espaçamento do texto
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(Color.gray)
-                            .cornerRadius(15)
-                            .foregroundColor(.white)
-                        //espaçamento do botao nas laterais
                             .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color.gray)
+                            .cornerRadius(10)
+                            .foregroundColor(.white)
                     }
                 }
-                .padding()
-                .onAppear() {
-                    viewModel.fetchEmojis()
-                    }
+                .padding(.horizontal, 20)
+            }
+        }
+        .padding()
+        .onAppear() {
+            viewModel.fetchEmojis()
         }
     }
 }
