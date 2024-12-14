@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = EmojiViewModel()
-    //@State private var searchText: String = ""
+    @State private var searchText: String = ""
+    @StateObject private var appleViewModel = AppleViewModel()
     
     var body: some View {
         NavigationView {
@@ -20,7 +21,7 @@ struct ContentView: View {
                         ProgressView()
                     }
                 } else if let avatarURL = viewModel.avatar?.avatarURL,
-                   let url = URL(string: avatarURL) {
+                          let url = URL(string: avatarURL) {
                     AsyncImage(url: url) { image in
                         image
                             .resizable()
@@ -45,7 +46,7 @@ struct ContentView: View {
                         .background(Color.gray)
                         .cornerRadius(15)
                         .foregroundColor(.white)
-                    }
+                }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
                 
@@ -106,12 +107,31 @@ struct ContentView: View {
                             .foregroundColor(.white)
                     }
                 }
+                
                 .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                
+                NavigationLink(destination: AppleReposListView()) {
+                    //aparencia do botao
+                    Text("Apple Repos")
+                        .font(.title)
+                    //espaçamento do texto
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.gray)
+                        .cornerRadius(15)
+                        .foregroundColor(.white)
+                }
+                
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                
             }
-        }
-        .padding()
-        .onAppear() {
-            viewModel.fetchEmojis()
+            .padding()
+            .onAppear() {
+                viewModel.fetchEmojis()
+            }
         }
     }
 }
