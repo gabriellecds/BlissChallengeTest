@@ -61,6 +61,23 @@ struct ContentView: View {
                         .cornerRadius(15)
                         .foregroundColor(.white)
                 }
+                
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                
+                NavigationLink(destination: AvatarListView()) {
+                    //aparencia do botao
+                    Text("Avatar List")
+                        .font(.title)
+                    //espaçamento do texto
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.gray)
+                        .cornerRadius(15)
+                        .foregroundColor(.white)
+                }
+                
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
                 
