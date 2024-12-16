@@ -1,17 +1,16 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = EmojiViewModel()
-    @State private var searchText: String = ""
+    @StateObject private var viewModel = ViewModel()
     @StateObject private var appleViewModel = AppleViewModel()
-    
+    @State private var searchText: String = ""
+
     var body: some View {
         NavigationView {
             VStack {
-                //Verificar se existe um emoji selecionado
+      
                 if let emoji = viewModel.selectedEmoji {
                     
-                    //Se houver, carregar a imagem usando o AsyncImage
                     AsyncImage(url: URL(string: emoji.url)) { image in
                         image
                             .resizable()
@@ -36,10 +35,8 @@ struct ContentView: View {
                     viewModel.selectRandomEmoji()
                     viewModel.saveSelectedEmoji()
                 }) {
-                    //aparencia do botao
                     Text("Random Emoji")
                         .font(.title)
-                    //espaçamento do texto
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
@@ -51,26 +48,8 @@ struct ContentView: View {
                 .padding(.bottom, 10)
                 
                 NavigationLink(destination: EmojiListView()) {
-                    //aparencia do botao
                     Text("Emojis List")
                         .font(.title)
-                    //espaçamento do texto
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.gray)
-                        .cornerRadius(15)
-                        .foregroundColor(.white)
-                }
-                
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
-                
-                NavigationLink(destination: AvatarListView()) {
-                    //aparencia do botao
-                    Text("Avatar List")
-                        .font(.title)
-                    //espaçamento do texto
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
@@ -83,7 +62,6 @@ struct ContentView: View {
                 .padding(.bottom, 10)
                 
                 HStack {
-                    //campo de busca
                     TextField("Enter username", text: $viewModel.searchText)
                         .padding()
                         .background(Color.white)
@@ -99,7 +77,6 @@ struct ContentView: View {
                     }) {
                         Text("Search")
                             .font(.title)
-                        //espaçamento do texto
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
                             .background(Color.gray)
@@ -111,11 +88,23 @@ struct ContentView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
                 
+                NavigationLink(destination: AvatarListView()) {
+                    Text("Avatar List")
+                        .font(.title)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.gray)
+                        .cornerRadius(15)
+                        .foregroundColor(.white)
+                }
+                
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                
                 NavigationLink(destination: AppleReposListView()) {
-                    //aparencia do botao
                     Text("Apple Repos")
                         .font(.title)
-                    //espaçamento do texto
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)

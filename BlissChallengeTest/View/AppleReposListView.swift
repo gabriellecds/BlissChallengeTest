@@ -7,7 +7,6 @@ struct AppleReposListView: View {
     
     var body: some View {
         VStack {
-            // A List exibirá todos os repositórios carregados
             List(appleViewModel.repos) { repo in
                 VStack(alignment: .leading) {
                     Text(repo.full_name)
@@ -19,13 +18,11 @@ struct AppleReposListView: View {
             if appleViewModel.repos.count < 100 {
                 ProgressView()
                     .onAppear {
-                        // Carregar mais repositórios quando o 'ProgressView' for exibido
                         appleViewModel.loadAppleRepos(page: page, size: 10)
-                    }
+                }
             }
         }
         .onAppear {
-            // Quando a tela aparecer pela primeira vez, carregar os primeiros repositórios
             appleViewModel.loadAppleRepos(page: page, size: 10)
         }
     }

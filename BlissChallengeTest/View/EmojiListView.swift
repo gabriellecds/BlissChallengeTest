@@ -30,7 +30,6 @@ struct EmojiListView: View{
                             .font(.caption)
                             .foregroundColor(.black)
                     }
-                    //Remover o emoji clicado da memoria
                     .onTapGesture {
                         if let index = savedEmojis.firstIndex(of: emojiEntity) {
                             savedEmojis.remove(at: index)
@@ -41,8 +40,6 @@ struct EmojiListView: View{
             .padding()
         }
         .refreshable {
-            //recarregar de volta os emojis que estao no cache e que foram deletados da memoria
-            
             savedEmojis = repository.fetchSavedEmojis()
         }
         .onAppear{

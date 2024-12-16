@@ -14,7 +14,6 @@ struct AvatarListView: View {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(savedAvatars, id: \.self) { avatarEntity in
                     VStack {
-                        // Garantir que avatarURL é não-nulo antes de tentar carregar a imagem
                         if let urlString = avatarEntity.avatarURL,
                            let url = URL(string: urlString) {
                             AsyncImage(url: url) { image in
